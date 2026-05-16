@@ -7,10 +7,19 @@ Semantic formatting plugin for Claude Code. Give your prompts **weight**.
 
 ## Install
 
+From the Claude Code plugin marketplace:
+
 ```bash
-claude plugin add hotmarks
-npx hotmarks setup
+/plugin install hotmarks
 ```
+
+Or load locally during development:
+
+```bash
+claude --plugin-dir ./hotmarks
+```
+
+The plugin auto-activates on install. No additional setup required.
 
 ## Usage
 
@@ -24,7 +33,7 @@ The plugin detects markers on submission and tells Claude to treat them with app
 
 ## Configuration
 
-Edit `.hotmarks` in your project root (created by `npx hotmarks setup`):
+Create a `.hotmarks` file in your project root to customize behavior:
 
 ```json
 {
@@ -49,16 +58,37 @@ Edit `.hotmarks` in your project root (created by `npx hotmarks setup`):
 | `transform` | Replaces markers with explicit semantic tags |
 | `both` | Does both |
 
+If no `.hotmarks` file exists, the plugin uses `reminder` mode with default settings.
+
 ## Uninstall
 
 ```bash
-npx hotmarks uninstall
-claude plugin remove hotmarks
+/plugin uninstall hotmarks
 ```
 
 ## How It Works
 
 1. You type `**text**` or `__text__` in your prompt
-2. On submission, the hook parses markers (skipping code blocks)
-3. Based on your config mode, it outputs semantic context
+2. On submission, the `UserPromptSubmit` hook parses markers (skipping code blocks)
+3. Based on your config mode, it outputs semantic context as `additionalContext`
 4. Claude receives the context and treats marked text with authority
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Run tests
+npm test
+
+# Build
+npm run build
+
+# Test plugin locally
+claude --plugin-dir .
+```
+
+## License
+
+MIT

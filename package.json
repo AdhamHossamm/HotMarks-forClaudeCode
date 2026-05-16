@@ -13,12 +13,6 @@
     "test:watch": "vitest",
     "prepublishOnly": "npm run build"
   },
-  "claude-code-plugin": {
-    "id": "hotmarks",
-    "name": "Hotmarks",
-    "description": "Semantic formatting for prompts. **Bold** = non-negotiable directive. __Underline__ = critical emphasis.",
-    "version": "0.1.0"
-  },
   "keywords": ["claude-code", "plugin", "semantic", "formatting", "directive"],
   "license": "MIT",
   "engines": {
