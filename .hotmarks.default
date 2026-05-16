@@ -1,0 +1,12 @@
+{
+  "mode": "reminder",
+  "markers": {
+    "directive": "**",
+    "critical": "__"
+  },
+  "transformTags": {
+    "directive": "[DIRECTIVE: %s]",
+    "critical": "[CRITICAL: %s]"
+  },
+  "skipCodeBlocks": true
+}
