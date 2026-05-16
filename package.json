@@ -13,15 +13,21 @@
     "test:watch": "vitest",
     "prepublishOnly": "npm run build"
   },
-  "keywords": ["claude-code", "plugin", "semantic", "formatting", "directive"],
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "semantic",
+    "formatting",
+    "directive"
+  ],
   "license": "MIT",
   "engines": {
     "node": ">=18"
   },
   "devDependencies": {
-    "typescript": "^5.4.0",
+    "@types/node": "^20.0.0",
     "tsup": "^8.0.0",
-    "vitest": "^2.0.0",
-    "@types/node": "^20.0.0"
+    "typescript": "^5.4.0",
+    "vitest": "^4.1.6"
   }
 }
