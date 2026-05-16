@@ -1,0 +1,33 @@
+{
+  "name": "hotmarks",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Semantic formatting plugin for Claude Code. **Bold** = directive. __Underline__ = critical emphasis.",
+  "main": "dist/hook.js",
+  "bin": {
+    "hotmarks": "dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build"
+  },
+  "claude-code-plugin": {
+    "id": "hotmarks",
+    "name": "Hotmarks",
+    "description": "Semantic formatting for prompts. **Bold** = non-negotiable directive. __Underline__ = critical emphasis.",
+    "version": "0.1.0"
+  },
+  "keywords": ["claude-code", "plugin", "semantic", "formatting", "directive"],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "tsup": "^8.0.0",
+    "vitest": "^2.0.0",
+    "@types/node": "^20.0.0"
+  }
+}
