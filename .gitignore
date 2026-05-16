@@ -2,7 +2,8 @@
 node_modules/
 
 # Build artifacts
-dist/
+# NOTE: dist/ is NOT gitignored — plugin must ship pre-built since
+# no build step runs when installed from a marketplace.
 *.tsbuildinfo
 
 # Logs
@@ -56,3 +57,9 @@ bun.lock
 
 # Plugin runtime config (user-specific)
 .hotmarks
+
+# Claude Code local files
+.claude/settings.local.json
+
+# Memory/session files
+.remember/
