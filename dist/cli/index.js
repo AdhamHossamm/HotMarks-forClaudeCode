@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 import {
   createDefaultConfig
-} from "../chunk-H72ED4Y2.js";
+} from "../chunk-CJF5WE2U.js";
 
 // src/cli/setup.ts
 import { existsSync } from "fs";
 import { join } from "path";
 function runSetup(targetDir) {
-  const configExists = existsSync(join(targetDir, ".hotmarks"));
-  createDefaultConfig(targetDir);
+  const configPath = join(targetDir, ".hotmarks");
+  const configExists = existsSync(configPath);
+  if (!configExists) createDefaultConfig(targetDir);
   const message = `
 Hotmarks setup complete!
 

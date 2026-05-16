@@ -1,6 +1,6 @@
 import {
   loadConfig
-} from "./chunk-H72ED4Y2.js";
+} from "./chunk-CJF5WE2U.js";
 
 // src/parser.ts
 function parseMarkers(text) {
@@ -92,7 +92,7 @@ async function main() {
     process.exit(0);
   }
   const prompt = hookInput.prompt;
-  if (!prompt) {
+  if (prompt === void 0) {
     process.exit(0);
   }
   const cwd = hookInput.cwd ?? process.cwd();

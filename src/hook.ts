@@ -76,7 +76,7 @@ async function main(): Promise<void> {
   }
 
   const prompt = hookInput.prompt;
-  if (!prompt) {
+  if (prompt === undefined) {
     process.exit(0);
   }
 

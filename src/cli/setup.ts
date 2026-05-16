@@ -9,8 +9,9 @@ export interface SetupResult {
 }
 
 export function runSetup(targetDir: string): SetupResult {
-  const configExists = existsSync(join(targetDir, ".hotmarks"));
-  createDefaultConfig(targetDir);
+  const configPath = join(targetDir, ".hotmarks");
+  const configExists = existsSync(configPath);
+  if (!configExists) createDefaultConfig(targetDir);
 
   const message = `
 Hotmarks setup complete!
