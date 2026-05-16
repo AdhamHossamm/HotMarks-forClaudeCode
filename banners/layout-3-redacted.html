@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=JetBrains+Mono:wght@400;700&family=Inter:wght@600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1500px; height: 600px; overflow: hidden; background: #e8e0d0; }
+
+  .banner {
+    width: 1500px; height: 600px;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(120,110,90,0.07) 28px, rgba(120,110,90,0.07) 29px),
+      #e8e0d0;
+    position: relative;
+    padding: 36px 52px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Paper stain effect */
+  .banner::before {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    background: radial-gradient(ellipse, rgba(160,140,100,0.12), transparent 70%);
+    top: 20px; right: 200px;
+    pointer-events: none;
+  }
+
+  .banner::after {
+    content: '';
+    position: absolute;
+    width: 200px; height: 200px;
+    background: radial-gradient(ellipse, rgba(160,140,100,0.08), transparent 70%);
+    bottom: 40px; left: 100px;
+    pointer-events: none;
+  }
+
+  /* Header area */
+  .doc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .doc-title {
+    font-family: 'Special Elite', monospace;
+    font-size: 14px;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+  }
+
+  .classified-stamp {
+    font-family: 'Inter', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: #b22222;
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    transform: rotate(-3deg);
+    border: 4px solid #b22222;
+    padding: 4px 18px;
+    opacity: 0.7;
+  }
+
+  .doc-ref {
+    font-family: 'Special Elite', monospace;
+    font-size: 11px;
+    color: #888;
+  }
+
+  /* Main content */
+  .doc-body {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .doc-left {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .project-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 52px;
+    font-weight: 800;
+    color: #222;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+
+  .project-name .hot {
+    color: #b22222;
+  }
+
+  .typed-desc {
+    font-family: 'Special Elite', monospace;
+    font-size: 16px;
+    color: #444;
+    line-height: 1.8;
+    max-width: 580px;
+  }
+
+  .redacted {
+    background: #222;
+    color: #222;
+    padding: 0 4px;
+    user-select: none;
+  }
+
+  .highlight-mark {
+    background: rgba(178,34,34,0.12);
+    border-bottom: 2px solid #b22222;
+    padding: 0 2px;
+  }
+
+  .underline-mark {
+    border-bottom: 2px solid #444;
+    padding: 0 2px;
+    font-weight: 700;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: auto;
+  }
+
+  .field {
+    display: flex;
+    gap: 8px;
+    font-family: 'Special Elite', monospace;
+    font-size: 13px;
+    color: #666;
+  }
+
+  .field-label {
+    color: #999;
+    min-width: 100px;
+  }
+
+  .field-value {
+    color: #333;
+  }
+
+  /* Right: The "document" with annotations */
+  .doc-right {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-left: 1px solid #bbb;
+    padding-left: 36px;
+  }
+
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: #999;
+    margin-bottom: 4px;
+  }
+
+  .evidence-block {
+    background: rgba(255,255,255,0.5);
+    border: 1px solid #c8bfa8;
+    padding: 16px 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.9;
+    color: #333;
+    position: relative;
+  }
+
+  .evidence-block .dir-text {
+    color: #b22222;
+    font-weight: 700;
+    background: rgba(178,34,34,0.06);
+    padding: 1px 3px;
+  }
+
+  .evidence-block .crit-text {
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 2px;
+  }
+
+  .annotation {
+    position: absolute;
+    font-family: 'Special Elite', monospace;
+    font-size: 11px;
+    transform: rotate(-2deg);
+  }
+
+  .annotation.a1 {
+    top: 4px; right: -8px;
+    color: #b22222;
+    border: 1px solid #b22222;
+    padding: 2px 6px;
+    background: #e8e0d0;
+  }
+
+  .annotation.a2 {
+    bottom: 4px; right: -8px;
+    color: #444;
+    border: 1px solid #444;
+    padding: 2px 6px;
+    background: #e8e0d0;
+  }
+
+  .result-block {
+    background: rgba(178,34,34,0.04);
+    border: 1px dashed #b22222;
+    padding: 14px 18px;
+    font-family: 'Special Elite', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #555;
+  }
+
+  .result-block strong {
+    color: #222;
+  }
+
+  .stamp-approved {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: #2a7a2a;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    border: 3px solid #2a7a2a;
+    padding: 4px 14px;
+    width: fit-content;
+    transform: rotate(-1deg);
+    opacity: 0.6;
+    margin-top: auto;
+  }
+
+  /* Footer */
+  .doc-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid #bbb;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-item {
+    font-family: 'Special Elite', monospace;
+    font-size: 11px;
+    color: #999;
+  }
+</style>
+</head>
+<body>
+<div class="banner">
+  <div class="doc-header">
+    <div>
+      <div class="doc-title">Project Briefing Document</div>
+      <div class="doc-ref">REF: HM-001 // CLAUDE CODE PLUGIN // PROMPT SEMANTICS</div>
+    </div>
+    <div class="classified-stamp">Directive</div>
+  </div>
+
+  <div class="doc-body">
+    <div class="doc-left">
+      <div class="project-name"><span class="hot">Hot</span>Marks</div>
+
+      <div class="typed-desc">
+        A prompt-submit hook that gives
+        <span class="highlight-mark">semantic weight</span> to
+        your instructions. Mark hard rules with
+        <span class="highlight-mark">**bold**</span>.
+        Flag critical priorities with
+        <span class="underline-mark">__underline__</span>.
+        Claude receives structured context instead of
+        <span class="redacted">flat ambiguous</span> text.
+      </div>
+
+      <div class="field-group">
+        <div class="field">
+          <span class="field-label">STATUS:</span>
+          <span class="field-value">Active</span>
+        </div>
+        <div class="field">
+          <span class="field-label">VERSION:</span>
+          <span class="field-value">0.0.1</span>
+        </div>
+        <div class="field">
+          <span class="field-label">LICENSE:</span>
+          <span class="field-value">MIT</span>
+        </div>
+        <div class="field">
+          <span class="field-label">INSTALL:</span>
+          <span class="field-value">claude plugin add hotmarks</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-right">
+      <div class="section-label">Exhibit A — Marked Prompt</div>
+
+      <div class="evidence-block">
+        Refactor the authentication module<br>
+        <span class="dir-text">**do not change the public API**</span><br>
+        and make sure<br>
+        <span class="crit-text">__all existing tests still pass__</span>
+        <div class="annotation a1">DIRECTIVE</div>
+        <div class="annotation a2">CRITICAL</div>
+      </div>
+
+      <div class="section-label">Exhibit B — Injected Context</div>
+
+      <div class="result-block">
+        <strong>NON-NEGOTIABLE:</strong> do not change the public API<br>
+        <strong>HIGHEST PRIORITY:</strong> all existing tests still pass<br>
+        <br>
+        Claude now enforces constraints and respects priority hierarchy.
+      </div>
+
+      <div class="stamp-approved">Operational</div>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <div class="footer-item">ZERO CONFIG // ZERO DEPENDENCIES</div>
+    <div class="footer-item">PROMPT-SUBMIT HOOK // AUTOMATIC</div>
+    <div class="footer-item">NODE ≥ 18 // TYPESCRIPT</div>
+  </div>
+</div>
+</body>
+</html>

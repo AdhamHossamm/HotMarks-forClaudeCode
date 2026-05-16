@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1500px; height: 600px; overflow: hidden; background: #1b1f27; }
+
+  .banner {
+    width: 1500px; height: 600px;
+    background: #1b1f27;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  /* Shared column styles */
+  .pane {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .pane-header {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    border-bottom: 1px solid #2d333b;
+  }
+
+  .pane-header.before {
+    background: #22272e;
+    color: #768390;
+  }
+
+  .pane-header.after {
+    background: #22272e;
+    color: #768390;
+  }
+
+  .pane-header .filename { color: #adbac7; font-weight: 500; }
+  .pane-header .meta { margin-left: auto; }
+  .pane-header .red-text { color: #f47067; }
+  .pane-header .green-text { color: #57ab5a; }
+
+  .pane-body {
+    flex: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1;
+    overflow: hidden;
+  }
+
+  .line {
+    display: flex;
+    height: 28px;
+    align-items: center;
+  }
+
+  .ln {
+    width: 44px;
+    text-align: right;
+    padding-right: 12px;
+    color: #444c56;
+    font-size: 12px;
+    user-select: none;
+    flex-shrink: 0;
+  }
+
+  .code {
+    flex: 1;
+    padding: 0 12px;
+    white-space: pre;
+    color: #adbac7;
+  }
+
+  /* Before side — deletions */
+  .line.del { background: rgba(244,112,103,0.1); }
+  .line.del .code { color: #f47067; }
+  .line.del .ln { color: #f47067; opacity: 0.5; }
+
+  /* After side — additions */
+  .line.add { background: rgba(87,171,90,0.1); }
+  .line.add .code { color: #57ab5a; }
+  .line.add .ln { color: #57ab5a; opacity: 0.5; }
+
+  .line.context { background: transparent; }
+
+  .hl-dir {
+    color: #f47067;
+    font-weight: 700;
+  }
+
+  .hl-crit {
+    color: #c69026;
+    font-weight: 700;
+  }
+
+  .hl-tag {
+    color: #57ab5a;
+    font-weight: 700;
+  }
+
+  .hl-dim { color: #545d68; }
+
+  /* Center divider */
+  .center-divider {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: #2d333b;
+    z-index: 1;
+  }
+
+  /* Branding overlay */
+  .brand-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 54px;
+    background: linear-gradient(180deg, #1b1f27 60%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 10;
+    padding-top: 4px;
+  }
+
+  .brand-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: #adbac7;
+  }
+
+  .brand-name .hot { color: #f47067; }
+
+  .brand-sep {
+    width: 1px; height: 16px;
+    background: #444c56;
+  }
+
+  .brand-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: #545d68;
+  }
+
+  .brand-ver {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #57ab5a;
+    border: 1px solid rgba(87,171,90,0.3);
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+
+  /* Bottom overlay */
+  .bottom-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 48px;
+    background: linear-gradient(0deg, #1b1f27 60%, transparent);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 12px;
+    gap: 32px;
+    z-index: 10;
+  }
+
+  .bot-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #545d68;
+  }
+
+  .bot-item strong { color: #768390; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="banner">
+  <div class="brand-overlay">
+    <span class="brand-name"><span class="hot">Hot</span>Marks</span>
+    <div class="brand-sep"></div>
+    <span class="brand-desc">What your prompt looks like before and after</span>
+    <span class="brand-ver">v0.0.1</span>
+  </div>
+
+  <div class="center-divider"></div>
+
+  <!-- BEFORE pane -->
+  <div class="pane">
+    <div class="pane-header before">
+      <span class="filename">prompt.txt</span>
+      <span class="meta"><span class="red-text">without hotmarks</span></span>
+    </div>
+    <div class="pane-body">
+      <div class="line context"><div class="ln"></div><div class="code"></div></div>
+      <div class="line context"><div class="ln">1</div><div class="code"><span class="hl-dim">// your prompt — everything is flat text</span></div></div>
+      <div class="line context"><div class="ln"></div><div class="code"></div></div>
+      <div class="line del"><div class="ln">2</div><div class="code">Refactor the auth module. Do not</div></div>
+      <div class="line del"><div class="ln">3</div><div class="code">change the public API. This is very</div></div>
+      <div class="line del"><div class="ln">4</div><div class="code">important. And also make sure all</div></div>
+      <div class="line del"><div class="ln">5</div><div class="code">existing tests still pass. That's</div></div>
+      <div class="line del"><div class="ln">6</div><div class="code">critical.</div></div>
+      <div class="line context"><div class="ln"></div><div class="code"></div></div>
+      <div class="line context"><div class="ln">7</div><div class="code"><span class="hl-dim">// Claude sees: 6 lines of equal weight</span></div></div>
+      <div class="line context"><div class="ln">8</div><div class="code"><span class="hl-dim">// "important" and "critical" are noise</span></div></div>
+      <div class="line context"><div class="ln">9</div><div class="code"><span class="hl-dim">// no semantic structure whatsoever</span></div></div>
+      <div class="line context"><div class="ln">10</div><div class="code"><span class="hl-dim">// constraints are buried in prose</span></div></div>
+      <div class="line context"><div class="ln"></div><div class="code"></div></div>
+      <div class="line context"><div class="ln">11</div><div class="code"><span class="hl-dim">// result: Claude might violate the</span></div></div>
+      <div class="line context"><div class="ln">12</div><div class="code"><span class="hl-dim">// API constraint. Might skip tests.</span></div></div>
+      <div class="line context"><div class="ln">13</div><div class="code"><span class="hl-dim">// You said "important" but so what?</span></div></div>
+    </div>
+  </div>
+
+  <!-- AFTER pane -->
+  <div class="pane">
+    <div class="pane-header after">
+      <span class="filename">prompt.txt</span>
+      <span class="meta"><span class="green-text">with hotmarks</span></span>
+    </div>
+    <div class="pane-body">
+      <div class="line context"><div class="ln"></div><div class="code"></div></div>
+      <div class="line context"><div class="ln">1</div><div class="code"><span class="hl-dim">// your prompt — with semantic markers</span></div></div>
+      <div class="line context"><div class="ln"></div><div class="code"></div></div>
+      <div class="line add"><div class="ln">2</div><div class="code">Refactor the auth module</div></div>
+      <div class="line add"><div class="ln">3</div><div class="code"><span class="hl-dir">**do not change the public API**</span></div></div>
+      <div class="line add"><div class="ln">4</div><div class="code">and ensure</div></div>
+      <div class="line add"><div class="ln">5</div><div class="code"><span class="hl-crit">__all existing tests still pass__</span></div></div>
+      <div class="line context"><div class="ln"></div><div class="code"></div></div>
+      <div class="line context"><div class="ln">6</div><div class="code"><span class="hl-dim">// hook injects → Claude receives:</span></div></div>
+      <div class="line context"><div class="ln"></div><div class="code"></div></div>
+      <div class="line add"><div class="ln">7</div><div class="code"><span class="hl-tag">DIRECTIVE:</span> do not change the public API</div></div>
+      <div class="line add"><div class="ln">8</div><div class="code"><span class="hl-tag">CRITICAL:</span>  all existing tests still pass</div></div>
+      <div class="line context"><div class="ln"></div><div class="code"></div></div>
+      <div class="line context"><div class="ln">9</div><div class="code"><span class="hl-dim">// result: API constraint enforced.</span></div></div>
+      <div class="line context"><div class="ln">10</div><div class="code"><span class="hl-dim">// Tests prioritized. Zero ambiguity.</span></div></div>
+      <div class="line context"><div class="ln"></div><div class="code"></div></div>
+    </div>
+  </div>
+
+  <div class="bottom-overlay">
+    <div class="bot-item"><strong>$</strong> claude plugin add hotmarks</div>
+    <div class="bot-item">MIT License</div>
+    <div class="bot-item">Zero Dependencies</div>
+    <div class="bot-item">Prompt-Submit Hook</div>
+  </div>
+</div>
+</body>
+</html>
