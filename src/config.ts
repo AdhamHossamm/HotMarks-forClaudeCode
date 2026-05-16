@@ -42,7 +42,6 @@ export function loadConfig(
 }
 
 function readConfigFile(path: string): Record<string, unknown> | null {
-  if (!existsSync(path)) return null;
   try {
     const content = readFileSync(path, "utf-8");
     return JSON.parse(content);
