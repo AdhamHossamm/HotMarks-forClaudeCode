@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Discussions
+    url: https://github.com/AdhamDevelworworx/HotMarks/discussions
+    about: Ask questions or discuss ideas that are not yet ready to be filed as issues.
