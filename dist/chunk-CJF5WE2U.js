@@ -22,7 +22,6 @@ function loadConfig(projectDir, homeDir = homedir()) {
   return mergeWithDefaults(raw);
 }
 function readConfigFile(path) {
-  if (!existsSync(path)) return null;
   try {
     const content = readFileSync(path, "utf-8");
     return JSON.parse(content);
