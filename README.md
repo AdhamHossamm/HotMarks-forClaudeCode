@@ -99,4 +99,4 @@ See [SECURITY.md](SECURITY.md) for reporting vulnerabilities.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE) — see [DISCLAIMER.md](DISCLAIMER.md) for full terms of use.
