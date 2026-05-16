@@ -1,65 +1,30 @@
 # Dependencies
 node_modules/
 
-# Build artifacts
-# NOTE: dist/ is NOT gitignored — plugin must ship pre-built since
-# no build step runs when installed from a marketplace.
+# Build artifacts — dist/ is committed (plugin ships pre-built)
 *.tsbuildinfo
 
 # Logs
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Runtime data
-pids/
-*.pid
-*.seed
-*.fifo
 
 # OS files
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 
 # IDE
 .idea/
 .vscode/
-*.swp
-*.swo
-*~
-
-# Environment/secrets
-.env
-.env.*
-*.pem
-*.key
-secrets/
-credentials/
 
 # Test coverage
 coverage/
-.nyc_output/
 
-# Temp files
-tmp/
-temp/
-*.tmp
+# Environment
+.env
+.env.*
 
-# Lock files (keep package-lock.json for npm)
-yarn.lock
-bun.lock
-
-# Plugin runtime config (user-specific)
+# Plugin runtime config (user-generated)
 .hotmarks
 
-# Claude Code local files
+# Claude Code local config
 .claude/settings.local.json
-
-# Memory/session files
 .remember/
