@@ -37,37 +37,177 @@ function extractMatches(text, pattern) {
   return matches;
 }
 
+// src/session.ts
+import { readFileSync, writeFileSync } from "fs";
+import { join } from "path";
+var MAX_DIRECTIVES = 4;
+var SESSION_FILE = ".hotmarks-session.json";
+function sessionPath(cwd) {
+  return join(cwd, SESSION_FILE);
+}
+function loadSession(cwd) {
+  try {
+    const raw = readFileSync(sessionPath(cwd), "utf-8");
+    const data = JSON.parse(raw);
+    if (Array.isArray(data.directives)) {
+      return { directives: data.directives.slice(0, MAX_DIRECTIVES) };
+    }
+  } catch {
+  }
+  return { directives: [] };
+}
+function saveSession(cwd, session) {
+  writeFileSync(
+    sessionPath(cwd),
+    JSON.stringify(session, null, 2) + "\n"
+  );
+}
+function updateSession(cwd, newDirectives) {
+  const session = loadSession(cwd);
+  const result = {
+    session,
+    added: [],
+    rejected: [],
+    removed: [],
+    cleared: false
+  };
+  const commands = categorize(newDirectives);
+  if (commands.clearAll) {
+    result.removed = [...session.directives];
+    session.directives = [];
+    result.cleared = true;
+    saveSession(cwd, session);
+    return result;
+  }
+  for (const target of commands.removals) {
+    const idx = session.directives.findIndex(
+      (d) => d.toLowerCase() === target.toLowerCase()
+    );
+    if (idx !== -1) {
+      result.removed.push(session.directives[idx]);
+      session.directives.splice(idx, 1);
+    }
+  }
+  for (const d of commands.additions) {
+    const alreadyExists = session.directives.some(
+      (existing) => existing.toLowerCase() === d.toLowerCase()
+    );
+    if (alreadyExists) continue;
+    if (session.directives.length >= MAX_DIRECTIVES) {
+      result.rejected.push(d);
+    } else {
+      session.directives.push(d);
+      result.added.push(d);
+    }
+  }
+  result.session = session;
+  saveSession(cwd, session);
+  return result;
+}
+function categorize(directives) {
+  const additions = [];
+  const removals = [];
+  let clearAll = false;
+  for (const d of directives) {
+    if (d === "!clear" || d === "!clear-all") {
+      clearAll = true;
+    } else if (d.startsWith("!remove:")) {
+      const target = d.slice("!remove:".length).trim();
+      if (target) removals.push(target);
+    } else {
+      additions.push(d);
+    }
+  }
+  return { additions, removals, clearAll };
+}
+
 // src/hook.ts
-function processPrompt(prompt, config) {
+function processPrompt(prompt, config, cwd) {
   const parsed = parseMarkers(prompt);
-  if (!parsed.hasMarkers) return null;
+  const workingDir = cwd ?? process.cwd();
+  let sessionResult = null;
+  if (parsed.directives.length > 0) {
+    sessionResult = updateSession(workingDir, parsed.directives);
+  }
+  const session = sessionResult?.session ?? loadSession(workingDir);
+  const hasActiveDirectives = session.directives.length > 0;
+  const hasCriticals = parsed.criticals.length > 0;
+  if (!hasActiveDirectives && !hasCriticals && !sessionResult?.cleared && !sessionResult?.removed.length) {
+    return null;
+  }
   const parts = [];
   if (config.mode === "reminder" || config.mode === "both") {
-    parts.push(buildReminder(parsed.directives, parsed.criticals));
+    parts.push(buildReminder(session.directives, parsed.criticals, sessionResult));
   }
   if (config.mode === "transform" || config.mode === "both") {
-    parts.push(buildTransformed(parsed.directives, parsed.criticals, config));
+    parts.push(buildTransformed(session.directives, parsed.criticals, config));
   }
   return parts.join("\n\n");
 }
-function buildReminder(directives, criticals) {
+function buildReminder(directives, criticals, sessionResult) {
   const lines = [
-    "SEMANTIC FORMATTING ACTIVE in this prompt:"
+    "SEMANTIC FORMATTING ACTIVE \u2014 HotMarks session:"
   ];
+  if (sessionResult?.added.length) {
+    lines.push("");
+    lines.push("NEW DIRECTIVE(S) ADDED this message:");
+    for (const d of sessionResult.added) {
+      lines.push(`  + ${d}`);
+    }
+  }
+  if (sessionResult?.rejected.length) {
+    lines.push("");
+    lines.push("REJECTED (max 4 directives reached \u2014 user must clear one first):");
+    for (const d of sessionResult.rejected) {
+      lines.push(`  \u2717 ${d}`);
+    }
+  }
+  if (sessionResult?.removed.length) {
+    lines.push("");
+    lines.push("REMOVED:");
+    for (const d of sessionResult.removed) {
+      lines.push(`  - ${d}`);
+    }
+  }
+  if (sessionResult?.cleared) {
+    lines.push("");
+    lines.push("ALL DIRECTIVES CLEARED.");
+  }
   if (directives.length > 0) {
     lines.push("");
-    lines.push("NON-NEGOTIABLE DIRECTIVE(S) \u2014 must be followed exactly:");
-    for (const d of directives) {
-      lines.push(`  - ${d}`);
+    lines.push(`ACTIVE DIRECTIVES (${directives.length}/4) \u2014 follow ALL of these:`);
+    for (let i = 0; i < directives.length; i++) {
+      lines.push(`  ${i + 1}. ${directives[i]}`);
     }
   }
   if (criticals.length > 0) {
     lines.push("");
-    lines.push("CRITICAL EMPHASIS \u2014 highest importance, prioritize above all else:");
+    lines.push("EMPHASIS THIS MESSAGE (not persisted):");
     for (const c of criticals) {
-      lines.push(`  - ${c}`);
+      lines.push(`  \u26A1 ${c}`);
     }
   }
+  lines.push("");
+  lines.push("ACKNOWLEDGMENT REQUIRED:");
+  lines.push('  - State your model name and version (e.g. "Claude Opus 4.6").');
+  if (sessionResult?.added.length) {
+    lines.push('  - For new directives: [Directive received: "<content>"] \u2014 will follow exactly.');
+  }
+  if (sessionResult?.rejected.length) {
+    lines.push("  - For rejected: inform user they're at max (4). List active directives. Ask which to remove.");
+  }
+  if (sessionResult?.removed.length || sessionResult?.cleared) {
+    lines.push("  - For removals: confirm what was cleared.");
+  }
+  if (criticals.length > 0) {
+    lines.push('  - For emphasis: [Priority noted: "<content>"] \u2014 treating as highest importance.');
+  }
+  if (directives.length > 0 && !sessionResult?.added.length) {
+    lines.push("  - Directives still active \u2014 no need to re-acknowledge unless user seems unaware.");
+  }
+  lines.push("");
+  lines.push("STALENESS CHECK: If any active directive seems irrelevant to current task,");
+  lines.push('ask user: "Directive #N seems no longer relevant \u2014 clear it?" Do NOT auto-remove.');
   return lines.join("\n");
 }
 function buildTransformed(directives, criticals, config) {
@@ -97,7 +237,7 @@ async function main() {
   }
   const cwd = hookInput.cwd ?? process.cwd();
   const config = loadConfig(cwd);
-  const output = processPrompt(prompt, config);
+  const output = processPrompt(prompt, config, cwd);
   if (output) {
     process.stdout.write(output);
   }

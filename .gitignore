@@ -25,6 +25,9 @@ coverage/
 # Plugin runtime config (user-generated)
 .hotmarks
 
+# Session state (per-conversation, auto-generated)
+.hotmarks-session.json
+
 # Banners (source HTML + screenshots)
 banners/
 

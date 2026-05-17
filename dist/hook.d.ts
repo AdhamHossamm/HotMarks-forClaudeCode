@@ -11,6 +11,21 @@ interface HotmarksConfig {
     skipCodeBlocks: boolean;
 }
 
-declare function processPrompt(prompt: string, config: HotmarksConfig): string | null;
+interface SessionData {
+    directives: string[];
+}
+interface SessionUpdateResult {
+    session: SessionData;
+    added: string[];
+    rejected: string[];
+    removed: string[];
+    cleared: boolean;
+}
 
-export { processPrompt };
+interface ProcessResult {
+    output: string | null;
+    sessionUpdate: SessionUpdateResult | null;
+}
+declare function processPrompt(prompt: string, config: HotmarksConfig, cwd?: string): string | null;
+
+export { type ProcessResult, processPrompt };
