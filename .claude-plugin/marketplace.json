@@ -1,0 +1,20 @@
+{
+  "name": "hotmarks-marketplace",
+  "owner": {
+    "name": "AdhamHossamm",
+    "email": "adhamdeveloping@gmail.com"
+  },
+  "metadata": {
+    "description": "Mark what matters in your prompts. Bold = hard rules, underline = top priorities.",
+    "version": "0.0.1"
+  },
+  "plugins": [
+    {
+      "name": "hotmarks",
+      "source": "./",
+      "description": "Semantic formatting plugin for Claude Code. Type **bold** for non-negotiable directives and __underline__ for critical emphasis. Hook fires on submit, zero config.",
+      "category": "productivity",
+      "tags": ["semantic", "formatting", "prompts", "directives", "hooks", "productivity"]
+    }
+  ]
+}
