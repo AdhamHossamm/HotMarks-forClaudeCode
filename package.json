@@ -20,7 +20,16 @@
     "formatting",
     "directive"
   ],
+  "author": "AdhamHossamm",
   "license": "MIT",
+  "homepage": "https://github.com/AdhamHossamm/HotMarks-forClaudeCode#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AdhamHossamm/HotMarks-forClaudeCode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AdhamHossamm/HotMarks-forClaudeCode/issues"
+  },
   "engines": {
     "node": ">=18"
   },
