@@ -28,3 +28,4 @@ coverage/
 # Claude Code local config
 .claude/settings.local.json
 .remember/
+docs/superpowers/

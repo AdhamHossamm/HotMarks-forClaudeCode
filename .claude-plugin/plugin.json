@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "hotmarks",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Semantic formatting for prompts. **Bold** = non-negotiable directive. __Underline__ = critical emphasis.",
   "author": {
     "name": "AdhamHossamm",
     "url": "https://github.com/AdhamHossamm"
   },
-  "repository": "https://github.com/AdhamHossamm/hotmarks",
+  "repository": "https://github.com/AdhamHossamm/HotMarks-forClaudeCode",
   "license": "MIT",
   "keywords": ["semantic", "formatting", "directive", "emphasis", "prompt"]
 }
