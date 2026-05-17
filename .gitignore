@@ -25,6 +25,9 @@ coverage/
 # Plugin runtime config (user-generated)
 .hotmarks
 
+# Banners (source HTML + screenshots)
+banners/
+
 # Claude Code local config
 .claude/settings.local.json
 .remember/
