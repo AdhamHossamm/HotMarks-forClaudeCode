@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "hotmarks",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Semantic formatting for prompts. **Bold** = non-negotiable directive. __Underline__ = critical emphasis.",
   "author": {
     "name": "AdhamHossamm",
