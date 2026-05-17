@@ -2,7 +2,7 @@
 
 **Give your prompts weight.** Semantic formatting plugin for Claude Code.
 
-![HotMarks — semantic formatting plugin for Claude Code by Tawaar Technologies](blob/HotMarks.png)
+![HotMarks — semantic formatting plugin for Claude Code by Tawaar Technologies](https://raw.githubusercontent.com/AdhamHossamm/HotMarks-forClaudeCode/master/blob/HotMarks.png)
 
 ---
 
