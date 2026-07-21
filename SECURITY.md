@@ -15,7 +15,7 @@ Please report security issues through GitHub's private advisory flow:
 
 https://github.com/AdhamHossamm/hotmarks/security/advisories/new
 
-Alternatively, email **adham@tawaar.net** directly.
+Alternatively, email **adhamdeveloping@gmail.com** directly.
 
 Include:
 - A clear description of the vulnerability
